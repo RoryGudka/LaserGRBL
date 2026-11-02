@@ -21,7 +21,7 @@ using SharpGL.SceneGraph;
 
 namespace LaserGRBL
 {
-	public class GrblFile : IEnumerable<GrblCommand>
+	public partial class GrblFile : IEnumerable<GrblCommand>
 	{
 		public enum CartesianQuadrant { I, II, III, IV, Mix, Unknown }
 
@@ -509,6 +509,8 @@ namespace LaserGRBL
 			public double fres;
 			public bool vectorfilling;
 			public Firmware firmwareType;
+			public bool islands;
+			public double islandGap = 0.5; 
 		}
 
 		private string skipcmd = "G0";
@@ -879,6 +881,12 @@ namespace LaserGRBL
         //private int lastColorSend = 0;
         private void ImageLine2Line(Bitmap bmp, L2LConf c)
 		{
+			if (c.islands && RasterFilling(c.dir))
+			{
+				ImageIslands2Line(bmp, c);
+				return;
+			}
+
 			bool fast = true;
 			List<ColorSegment> segments = GetSegments(bmp, c);
 			List<GrblCommand> temp = new List<GrblCommand>();
