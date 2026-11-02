@@ -59,6 +59,8 @@ namespace LaserGRBL.RasterConverter
 		private decimal mDownSampling;
 		private bool mUseDownSampling;
 		private bool mOptimizeFast;
+		private bool mSkipWhiteSpace;
+		private decimal mIslandGap = 0.5m;
 		private Direction mDirection;
 		private Direction mFillingDirection;
 		private ImageTransform.DitheringMode mDithering;
@@ -723,6 +725,18 @@ namespace LaserGRBL.RasterConverter
 			}
 		}
 
+		public bool SkipWhiteSpace
+		{
+			get { return mSkipWhiteSpace; }
+			set { mSkipWhiteSpace = value; }
+		}
+
+		public decimal IslandGap
+		{
+			get { return mIslandGap; }
+			set { mIslandGap = value; }
+		}
+
 		public Direction LineDirection
 		{
 			get { return mDirection; }
@@ -1064,6 +1078,8 @@ namespace LaserGRBL.RasterConverter
 						conf.oX = TargetOffset.X;
 						conf.oY = TargetOffset.Y;
 						conf.borderSpeed = BorderSpeed;
+						conf.islands = SkipWhiteSpace && (SelectedTool == Tool.Line2Line || SelectedTool == Tool.Dithering);
+						conf.islandGap = (double)IslandGap;
 						conf.pwm = Settings.GetObject("Support Hardware PWM", true);
 						conf.firmwareType = Settings.GetObject("Firmware Type", Firmware.Grbl);
 

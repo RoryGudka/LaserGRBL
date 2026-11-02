@@ -868,6 +868,7 @@
     <Compile Include="CSV\FormattedMessage.cs" />
     <Compile Include="GrblCommand.cs" />
     <Compile Include="GrblFile.cs" />
+    <Compile Include="GrblFile.Islands.cs" />
     <Compile Include="HotkeyManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>

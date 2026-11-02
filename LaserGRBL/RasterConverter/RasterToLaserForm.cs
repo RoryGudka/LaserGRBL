@@ -29,6 +29,7 @@ namespace LaserGRBL.RasterConverter
 		private RasterToLaserForm(GrblCore core, string filename, bool append)
 		{
 			InitializeComponent();
+			CreateIslandGapControls();
 			mCore = core;
 
 			UDQuality.Maximum = UDFillingQuality.Maximum = GetMaxQuality();
@@ -286,6 +287,8 @@ namespace LaserGRBL.RasterConverter
 			CbDirections.SelectedItem = IP.LineDirection = Settings.GetObject("GrayScaleConversion.Line2LineOptions.Direction", ImageProcessor.Direction.Horizontal);
 			UDQuality.Value = IP.Quality = Math.Min(UDQuality.Maximum, Settings.GetObject("GrayScaleConversion.Line2LineOptions.Quality", 3.0m));
 			CbLinePreview.Checked = IP.LinePreview = Settings.GetObject("GrayScaleConversion.Line2LineOptions.Preview", false);
+			CbSkipWhiteSpace.Checked = IP.SkipWhiteSpace = Settings.GetObject("GrayScaleConversion.Line2LineOptions.SkipWhiteSpace", false);
+			UDIslandGap.Value = IP.IslandGap = Math.Max(UDIslandGap.Minimum, Math.Min(UDIslandGap.Maximum, Settings.GetObject("GrayScaleConversion.Line2LineOptions.IslandGap", 0.5m)));
 
 			CbSpotRemoval.Checked = IP.UseSpotRemoval = Settings.GetObject("GrayScaleConversion.VectorizeOptions.SpotRemoval.Enabled", false);
 			UDSpotRemoval.Value = IP.SpotRemoval = Settings.GetObject("GrayScaleConversion.VectorizeOptions.SpotRemoval.Value", 2.0m);
@@ -340,6 +343,8 @@ namespace LaserGRBL.RasterConverter
                 },
                 { "GrayScaleConversion.Line2LineOptions.Quality", UDQuality.Value },
                 { "GrayScaleConversion.Line2LineOptions.Preview", CbLinePreview.Checked },
+                { "GrayScaleConversion.Line2LineOptions.SkipWhiteSpace", CbSkipWhiteSpace.Checked },
+                { "GrayScaleConversion.Line2LineOptions.IslandGap", UDIslandGap.Value },
                 { "GrayScaleConversion.VectorizeOptions.SpotRemoval.Enabled", CbSpotRemoval.Checked },
                 { "GrayScaleConversion.VectorizeOptions.SpotRemoval.Value", UDSpotRemoval.Value },
                 { "GrayScaleConversion.VectorizeOptions.Smooting.Enabled", CbSmoothing.Checked },
@@ -537,6 +542,51 @@ namespace LaserGRBL.RasterConverter
 
 		void CbDirectionsSelectedIndexChanged(object sender, EventArgs e)
 		{ if (IP != null) IP.LineDirection = (ImageProcessor.Direction)CbDirections.SelectedItem; }
+
+		private CheckBox CbSkipWhiteSpace;
+		private Label LblIslandGap;
+		private LaserGRBL.UserControls.NumericInput.NumericUpDown UDIslandGap;
+		private Label LblIslandGapmm;
+
+		private void CreateIslandGapControls()
+		{
+			CbSkipWhiteSpace = new CheckBox { Name = "CbSkipWhiteSpace", Text = Strings.SkipWhiteSpace, AutoSize = true, Margin = CbLinePreview.Margin, UseVisualStyleBackColor = true };
+			LblIslandGap = new Label { Name = "LblIslandGap", Text = Strings.IslandGap, AutoSize = true, Anchor = label5.Anchor, Visible = false };
+			UDIslandGap = new LaserGRBL.UserControls.NumericInput.NumericUpDown { Name = "UDIslandGap", Size = UDQuality.Size, Margin = UDQuality.Margin, Anchor = UDQuality.Anchor, Visible = false };
+			((ISupportInitialize)UDIslandGap).BeginInit();
+			UDIslandGap.DecimalPlaces = 1;
+			UDIslandGap.Increment = 0.1m;
+			UDIslandGap.Minimum = 0.1m;
+			UDIslandGap.Maximum = 50m;
+			UDIslandGap.Value = 0.5m;
+			((ISupportInitialize)UDIslandGap).EndInit();
+			LblIslandGapmm = new Label { Name = "LblIslandGapmm", Text = "mm", AutoSize = true, Anchor = label8.Anchor, Visible = false };
+
+			TT.SetToolTip(CbSkipWhiteSpace, Strings.SkipWhiteSpaceToolTip);
+			TT.SetToolTip(LblIslandGap, Strings.IslandGapToolTip);
+			TT.SetToolTip(UDIslandGap, Strings.IslandGapToolTip);
+			CbSkipWhiteSpace.CheckedChanged += (s, e) =>
+			{
+				LblIslandGap.Visible = UDIslandGap.Visible = LblIslandGapmm.Visible = CbSkipWhiteSpace.Checked;
+				if (IP != null) IP.SkipWhiteSpace = CbSkipWhiteSpace.Checked;
+			};
+			UDIslandGap.ValueChanged += (s, e) => { if (IP != null) IP.IslandGap = UDIslandGap.Value; };
+
+			TLP.SuspendLayout();
+			TLP.RowCount = 7;
+			while (TLP.RowStyles.Count < 7)
+				TLP.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+			for (int i = 0; i < 6; i++)
+				TLP.RowStyles[i] = new RowStyle(SizeType.AutoSize);
+			TLP.RowStyles[6] = new RowStyle(SizeType.Absolute, 16);
+			TLP.SetRow(CbLinePreview, 5);
+			TLP.Controls.Add(CbSkipWhiteSpace, 0, 3);
+			TLP.SetColumnSpan(CbSkipWhiteSpace, 3);
+			TLP.Controls.Add(LblIslandGap, 0, 4);
+			TLP.Controls.Add(UDIslandGap, 1, 4);
+			TLP.Controls.Add(LblIslandGapmm, 2, 4);
+			TLP.ResumeLayout();
+		}
 
 		void CbResizeSelectedIndexChanged(object sender, EventArgs e)
 		{

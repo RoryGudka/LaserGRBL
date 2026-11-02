@@ -398,6 +398,18 @@ Only engravers with grbl version &gt;= 1.1 with "laser mode" enabled ($32=1) can
   <data name="DirectionNewHilbert" xml:space="preserve">
     <value>Hilbert</value>
   </data>
+  <data name="SkipWhiteSpace" xml:space="preserve">
+    <value>Skip white space</value>
+  </data>
+  <data name="SkipWhiteSpaceToolTip" xml:space="preserve">
+    <value>Engrave each separate dark area on its own and jump between them, instead of sweeping every line across the full image.</value>
+  </data>
+  <data name="IslandGap" xml:space="preserve">
+    <value>Island Gap</value>
+  </data>
+  <data name="IslandGapToolTip" xml:space="preserve">
+    <value>White gaps narrower than this are engraved as part of the same island. Bigger islands mean fewer jumps, smaller islands skip more white space.</value>
+  </data>
   <data name="DitheringOptions" xml:space="preserve">
     <value>Dithering Options</value>
   </data>

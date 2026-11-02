@@ -514,6 +514,42 @@ namespace LaserGRBL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Island Gap.
+        /// </summary>
+        internal static string IslandGap {
+            get {
+                return ResourceManager.GetString("IslandGap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to White gaps narrower than this are engraved as part of the same island....
+        /// </summary>
+        internal static string IslandGapToolTip {
+            get {
+                return ResourceManager.GetString("IslandGapToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip white space.
+        /// </summary>
+        internal static string SkipWhiteSpace {
+            get {
+                return ResourceManager.GetString("SkipWhiteSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Engrave each separate dark area on its own and jump between them, instead of sweeping every line across the full image..
+        /// </summary>
+        internal static string SkipWhiteSpaceToolTip {
+            get {
+                return ResourceManager.GetString("SkipWhiteSpaceToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Horizontal.
         /// </summary>
         internal static string DirectionNewHorizontal {
